@@ -86,6 +86,18 @@ public class Messages {
     public static void cooperGoodbye(){
         displayMessage("Thank you for using Cooper's Compounding Interest Calculator!");
     }
+
+    // --- Jan's Messages ---
+    public static void janGreet() {
+        displayMessage("Welcome to Jan's JanTemperature Calculator");
+        System.out.println("This calculator converts temperatures between Celsius, Fahrenheit, and Kelvin.");
+        System.out.println("Please enter the degrees and the scale code (C, F, K) when prompted.");
+    }
+
+    public static void janGoodbye() {
+        displayMessage("Thank you for using Jan's JanTemperature Calculator");
+    }
+
   
     public static void caelGreet() {
         displayMessage("Welcome to Cael's Temperature Calculator");
