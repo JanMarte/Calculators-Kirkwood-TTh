@@ -30,7 +30,7 @@ public class JanTemperature {
             throw new IllegalArgumentException("Invalid scale: Must be 'C', 'F', or 'K'.");
         }
         if (isBelowAbsoluteZero(degrees, scale)) {
-            throw new IllegalArgumentException("JanTemperature cannot be below absolute zero.");
+            throw new IllegalArgumentException("Temperature cannot be below absolute zero.");
         }
         this.degrees = degrees;
         this.scale = Character.toUpperCase(scale);
@@ -51,7 +51,7 @@ public class JanTemperature {
      */
     public void setDegrees(double degrees) {
         if (isBelowAbsoluteZero(degrees, this.scale)) {
-            throw new IllegalArgumentException("JanTemperature cannot be below absolute zero.");
+            throw new IllegalArgumentException("Temperature cannot be below absolute zero.");
         }
         this.degrees = degrees;
     }
