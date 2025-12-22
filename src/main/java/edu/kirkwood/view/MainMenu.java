@@ -17,6 +17,7 @@ public class MainMenu {
                 "Emilia's Pythagorean Theorem Calculator",
                 "Asle's Measurement Calculator",
                 "Cel's Metric Conversion Calculator",
+                "Jan's Temperature Conversion Calculator",
                 "Quit"
         };
         String menuTitle = "Main Menu";
@@ -51,6 +52,8 @@ public class MainMenu {
                 case 9:
                     CelesteMetricMeasurementCalculator.start();
                     break;
+                case 10:
+                    JanTemperatureCalculator.start();
                 default:
                     return;
             }
