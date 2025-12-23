@@ -20,7 +20,9 @@ public class MainMenu {
                 "Jan's Temperature Conversion Calculator",
                 "Quit"
         };
+
         String menuTitle = "Main Menu";
+
         while(true) {
             printMenu(menuTitle, menuItems);
             int choice = getInt("Choose an option", false, 1, menuItems.length);
@@ -54,12 +56,11 @@ public class MainMenu {
                     break;
                 case 10:
                     JanTemperatureCalculator.start();
+                    break;
                 default:
                     return;
             }
         }
-
-
     }
 
     /**
@@ -134,6 +135,5 @@ public class MainMenu {
         }
 
         return returnInt;
-
     };
 }

@@ -11,38 +11,30 @@ import edu.kirkwood.view.UserInput;
  */
 public class JanTemperatureCalculator {
 
-    /**
-     * Converts a temperature from one scale to another.
-     * This method is used by the Unit Tests and the start() method.
-     *
-     * @param degreesStr      The temperature value as a String.
-     * @param currentScaleStr The current scale code (e.g. "C").
-     * @param targetScaleStr  The target scale code (e.g. "F").
-     * @return The converted temperature as a double.
-     */
-    public double convert(String degreesStr, String currentScaleStr, String targetScaleStr) {
-        // Validate inputs are not null/empty
-        if (degreesStr == null || degreesStr.isBlank()) {
-            throw new IllegalArgumentException("Degrees input cannot be empty.");
-        }
-        if (currentScaleStr == null || currentScaleStr.isBlank()) {
-            throw new IllegalArgumentException("Current scale input cannot be empty.");
-        }
-        if (targetScaleStr == null || targetScaleStr.isBlank()) {
-            throw new IllegalArgumentException("Target scale input cannot be empty.");
+    public double parseAndConvert(String input) {
+        if (input == null || input.isBlank()) {
+            throw new IllegalArgumentException("Input cannot be empty.");
         }
 
-        // Parse the number
+        String[] parts = input.trim().split("\\s+");
+
+        if (parts.length != 3) {
+            throw new IllegalArgumentException("Invalid format. Usage: 'Value Scale TargetScale' (e.g. 100 F C)");
+        }
+
         double degrees;
         try {
-            degrees = Double.parseDouble(degreesStr);
+            degrees = Double.parseDouble(parts[0]);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid number format for degrees.");
         }
 
-        // Create Model and Convert
-        char currentScale = currentScaleStr.charAt(0);
-        char targetScale = targetScaleStr.charAt(0);
+        if (parts[1].length() != 1 || parts[2].length() != 1) {
+            throw new IllegalArgumentException("Scales must be single characters (C, F, K).");
+        }
+
+        char currentScale = parts[1].charAt(0);
+        char targetScale = parts[2].charAt(0);
 
         JanTemperature temp = new JanTemperature(degrees, currentScale);
 
@@ -67,86 +59,23 @@ public class JanTemperatureCalculator {
         Messages.janGreet();
 
         while (true) {
-            String degreesStr = "";
-            String currentScaleStr = "";
-
-            // Loop until we get a valid Temperature combination (Degrees + Scale)
-            // This prevents moving on if the temperature is below absolute zero
-            while(true) {
-                // 1. Get Valid Number
-                degreesStr = getValidDoubleString("Enter temperature value");
-
-                // 2. Get Valid Scale
-                currentScaleStr = getValidScaleInput("Enter current scale (C, F, K)");
-
-                // 3. Logic Validation (Check Absolute Zero)
-                try {
-                    double d = Double.parseDouble(degreesStr);
-                    char c = currentScaleStr.charAt(0);
-                    // Attempt to create the object to trigger the absolute zero check
-                    new JanTemperature(d, c);
-                    // If we get here, the input is valid
-                    break;
-                } catch (IllegalArgumentException e) {
-                    UIUtility.displayError(e.getMessage());
-                    UIUtility.displayMessage("Please re-enter the temperature and scale.");
-                }
-            }
-
-            // 4. Get Target Scale (Only asked if the previous steps were valid)
-            String targetScaleStr = getValidScaleInput("Enter target scale (C, F, K)");
+            String input = UserInput.getString("Enter conversion");
 
             try {
-                // Perform Conversion
-                double result = app.convert(degreesStr, currentScaleStr, targetScaleStr);
+                double result = app.parseAndConvert(input);
+                String[] parts = input.trim().split("\\s+");
+                String symbol = parts[2].toUpperCase();
 
-                // Display Result
-                String symbol = targetScaleStr.substring(0, 1).toUpperCase();
                 UIUtility.displaySuccess(String.format("Result: %.2f %s", result, symbol));
 
             } catch (IllegalArgumentException e) {
                 UIUtility.displayError(e.getMessage());
             }
 
-            // Loop Check
             if (!UserInput.getBoolean("Perform another conversion?")) {
                 break;
             }
         }
-
         Messages.janGoodbye();
-    }
-
-    /**
-     * loops until the user enters a valid number.
-     * @return the valid number as a String.
-     */
-    private static String getValidDoubleString(String prompt) {
-        while (true) {
-            String input = UserInput.getString(prompt);
-            try {
-                Double.parseDouble(input);
-                return input; // It's valid, return it
-            } catch (NumberFormatException e) {
-                UIUtility.displayError("Invalid input. Please enter a numeric value.");
-            }
-        }
-    }
-
-    /**
-     * loops until the user enters C, F, or K.
-     * @return the valid scale string.
-     */
-    private static String getValidScaleInput(String prompt) {
-        while (true) {
-            String input = UserInput.getString(prompt);
-            if (input != null && input.length() > 0) {
-                char c = Character.toUpperCase(input.charAt(0));
-                if (c == 'C' || c == 'F' || c == 'K') {
-                    return input;
-                }
-            }
-            UIUtility.displayError("Invalid scale. Please enter C, F, or K.");
-        }
     }
 }

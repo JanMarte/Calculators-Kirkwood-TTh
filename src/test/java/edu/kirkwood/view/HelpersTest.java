@@ -165,7 +165,7 @@ class HelpersTest {
         assertThrows(IllegalArgumentException.class, () -> Helpers.isDateInThePast(date));
     }
 
-    // Jan's Work
+    // Jan's
     public static boolean isValidString(String str) {
         return str != null && !str.equals("");
     }
