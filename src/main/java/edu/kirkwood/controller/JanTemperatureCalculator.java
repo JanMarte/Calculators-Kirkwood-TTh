@@ -7,6 +7,8 @@ import edu.kirkwood.view.UserInput;
 
 public class JanTemperatureCalculator {
 
+    private static final double MAX_REALISTIC_TEMP = 1_000_000.0;
+
     public double parseAndConvert(String input) {
         if (input == null || input.isBlank()) {
             throw new IllegalArgumentException("Input cannot be empty.");
@@ -23,6 +25,11 @@ public class JanTemperatureCalculator {
             degrees = Double.parseDouble(parts[0]);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Invalid number format for degrees.");
+        }
+
+        // Checks for realistically large temperatures
+        if (degrees > MAX_REALISTIC_TEMP) {
+            throw new IllegalArgumentException(String.format("Value too large. Please enter a realistic temperature (Max: %,.0f).", MAX_REALISTIC_TEMP));
         }
 
         if (parts[1].length() != 1 || parts[2].length() != 1) {

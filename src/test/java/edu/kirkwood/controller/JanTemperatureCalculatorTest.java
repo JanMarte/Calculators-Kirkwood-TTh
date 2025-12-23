@@ -3,9 +3,6 @@ package edu.kirkwood.controller;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * JUnit test class for the TemperatureCalculator controller.
  * Verifies parsing logic, valid conversions, and exception handling.
@@ -29,6 +26,48 @@ public class JanTemperatureCalculatorTest {
         String input = "32 F K";
         double result = calculator.parseAndConvert(input);
         assertEquals(273.15, result, DELTA, "32 F should match 273.15 K");
+    }
+
+    // Valid Negative Number (e.g., -40 C is -40 F)
+    @Test
+    void testParseValidNegativeNumber() {
+        String input = "-40 C F";
+        double result = calculator.parseAndConvert(input);
+        assertEquals(-40.0, result, DELTA, "-40 C should be exactly -40 F");
+    }
+
+    // Extremely Large Number
+    @Test
+    void testParseExtremelyLargeNumber() {
+        // 1 Billion degrees (Now exceeds the 1 Million limit)
+        String input = "1000000000 C K";
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            calculator.parseAndConvert(input);
+        });
+
+        // Verify the error message mentions the size limit
+        assertTrue(exception.getMessage().contains("Value too large"));
+    }
+
+    // String with Mixed Letters and Numbers (e.g. "12a3")
+    @Test
+    void testParseMixedAlphaNumeric() {
+        String input = "12a3 F C";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            calculator.parseAndConvert(input);
+        });
+        assertEquals("Invalid number format for degrees.", exception.getMessage());
+    }
+
+    // Empty Input (Whitespace only)
+    @Test
+    void testParseWhitespaceOnly() {
+        String input = "   ";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            calculator.parseAndConvert(input);
+        });
+        assertEquals("Input cannot be empty.", exception.getMessage());
     }
 
     // Test Invalid Number Input
