@@ -5,10 +5,6 @@ import edu.kirkwood.view.Messages;
 import edu.kirkwood.view.UIUtility;
 import edu.kirkwood.view.UserInput;
 
-/**
- * Controller class for the JanTemperature Calculator.
- * Handles both the conversion logic (for tests) and the user interface loop (for the app).
- */
 public class JanTemperatureCalculator {
 
     public double parseAndConvert(String input) {
@@ -39,41 +35,44 @@ public class JanTemperatureCalculator {
         JanTemperature temp = new JanTemperature(degrees, currentScale);
 
         switch (Character.toUpperCase(targetScale)) {
-            case 'C':
-                return temp.toCelsius();
-            case 'F':
-                return temp.toFahrenheit();
-            case 'K':
-                return temp.toKelvin();
-            default:
-                throw new IllegalArgumentException("Invalid target scale: Must be 'C', 'F', or 'K'.");
+            case 'C': return temp.toCelsius();
+            case 'F': return temp.toFahrenheit();
+            case 'K': return temp.toKelvin();
+            default:  throw new IllegalArgumentException("Invalid target scale: Must be 'C', 'F', or 'K'.");
         }
     }
 
-    /**
-     * Starts the interactive user interface for this calculator.
-     * Called by the MainMenu.
-     */
     public static void start() {
         JanTemperatureCalculator app = new JanTemperatureCalculator();
         Messages.janGreet();
 
+        // Outer Loop
         while (true) {
-            String input = UserInput.getString("Enter conversion");
 
-            try {
-                double result = app.parseAndConvert(input);
-                String[] parts = input.trim().split("\\s+");
-                String symbol = parts[2].toUpperCase();
+            // Inner Loop
+            while (true) {
+                String input = UserInput.getString("Enter conversion");
 
-                UIUtility.displaySuccess(String.format("Result: %.2f %s", result, symbol));
+                try {
+                    // Attempt conversion
+                    double result = app.parseAndConvert(input);
 
-            } catch (IllegalArgumentException e) {
-                UIUtility.displayError(e.getMessage());
+                    // If successful, display result and BREAK the inner loop
+                    String[] parts = input.trim().split("\\s+");
+                    String symbol = parts[2].toUpperCase();
+
+                    UIUtility.displaySuccess(String.format("Result: %.2f %s", result, symbol));
+                    break;
+
+                } catch (IllegalArgumentException e) {
+                    // If error: Show specific mistake and CONTINUE inner loop (re-prompt immediately)
+                    UIUtility.displayError(e.getMessage());
+                }
             }
 
+            // This is only reached AFTER a successful conversion
             if (!UserInput.getBoolean("Perform another conversion?")) {
-                break;
+                break; // Break outer loop to return to Main Menu
             }
         }
         Messages.janGoodbye();
