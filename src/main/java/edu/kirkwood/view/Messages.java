@@ -91,7 +91,8 @@ public class Messages {
     public static void janGreet() {
         displayMessage("Welcome to Jan's Temperature Conversion Calculator");
         System.out.println("This calculator converts temperatures between Celsius, Fahrenheit, and Kelvin.");
-        System.out.println("Please enter the degrees and the scale code (C, F, K) when prompted.");
+        System.out.println("Please enter your conversion in one line: [Degrees] [Current Scale] [Target Scale]");
+        System.out.println("Example: 98.6 F C");
     }
 
     public static void janGoodbye() {
